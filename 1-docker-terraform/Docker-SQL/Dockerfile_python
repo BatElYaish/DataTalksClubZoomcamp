@@ -1,0 +1,17 @@
+FROM python:3.11
+
+RUN apt update
+# Install curl
+RUN apt-get install curl
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the requirements.txt file into the container
+COPY requirements.txt requirements.txt
+
+# Install Python dependencies from requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Keep the container running
+CMD ["tail", "-f", "/dev/null"]
