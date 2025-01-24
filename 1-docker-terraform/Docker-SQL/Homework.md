@@ -110,3 +110,9 @@ Result
 |"Drop_Off_Zone" |"Max_Tip"|
 |----------------|---------|
 |"JFK Airport"   |87.3     |
+
+## Question 7. Terraform Workflow
+
+Which of the following sequences, respectively, describes the workflow
+
+`terraform init, terraform apply -auto-approve, terraform destroy`
