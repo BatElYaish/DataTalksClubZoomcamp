@@ -2,7 +2,7 @@
 
 ## Q1 - Within the execution for Yellow Taxi data for the year 2020 and month 12: what is the uncompressed file size?
 
-![Q1](../../2-workflow-orchestration/Images/Q1.png)
+![Q1](../../../2-workflow-orchestration/Images/Q1.png)
 
 Answer: 128.3 MB
 
