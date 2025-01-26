@@ -18,7 +18,7 @@ Data files are location : <https://github.com/DataTalksClub/nyc-tlc-data/>
 `docker build -f Dockerfile_python -t python-app .`
 3. Run the docker compose file
 `docker compose -p zoomcamp-postgres up --build -d`
-4. Run `docker ps` to get your python CONTAINER ID
+4. Run `docker ps --filter "name=zoomcamp-postgres-python-app"` to get your python CONTAINER ID
 5. Open a bash terminal inside python container
 `docker exec -it <CONTAINER ID> /bin/bash`
 6. Run `ls` to make sure that the you can see the files

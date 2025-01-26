@@ -43,4 +43,4 @@ build docker ingest pipeline
 
 run docker pipeline
 
-`docker run -it --network pg-network taxi_ingest:v001 --user=postgres --password=postgres --host=pg-database --port=5432 --db=ny_taxi --table_name=yellow_taxi_trips --url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz`
+`docker run -it --network pg-network taxi_ingest:v001 --user=postgres --password=postgres --host=postgres --port=5432 --db=ny_taxi --table_name=yellow_taxi_trips --url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz`
