@@ -12,7 +12,7 @@ Learn Docker, docker-compose, and Terraform for infrastructure setup. **Progress
 
 ### Module 2: Workflow Orchestration
 
-Understand data lake setups and workflow orchestration with Kestra. **Progress:** Upcoming ⏳
+Understand data lake setups and workflow orchestration with Kestra. **Progress:** Done ✅
 
 ### Module 3: Data Warehouse
 
