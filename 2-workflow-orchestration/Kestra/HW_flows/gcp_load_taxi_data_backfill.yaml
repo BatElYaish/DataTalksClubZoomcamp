@@ -1,0 +1,48 @@
+id: gcp_load_taxi_data_backfill
+namespace: zoomcamp
+
+variables:
+  color:
+    - yellow
+    - green
+  years:
+    - 2021
+    # - 2020
+  months:
+    - "01"
+    - "02"
+    - "03"
+    - "04"
+    - "05"
+    - "06"
+    - "07"
+    # - "08"
+    # - "09"
+    # - "10"
+    # - "11"
+    # - "12"
+
+tasks:
+  - id: for_each_color
+    type: io.kestra.plugin.core.flow.ForEach
+    values: "{{vars.color}}"
+    tasks:
+      - id: for_each_year
+        type: io.kestra.plugin.core.flow.ForEach
+        values: "{{vars.years}}"
+        tasks:
+          - id: for_each_month
+            type: io.kestra.plugin.core.flow.ForEach
+            values: "{{vars.months}}"
+            tasks:
+              - id: load_taxi_data
+                type: io.kestra.plugin.core.flow.Subflow
+                flowId: 06_gcp_taxi
+                namespace: zoomcamp
+                transmitFailed: true
+                wait: true
+                inputs:
+                  taxi: "{{parents[1].taskrun.value}}"
+                  year: "{{parents[0].taskrun.value}}"
+                  month: "{{taskrun.value}}"
+

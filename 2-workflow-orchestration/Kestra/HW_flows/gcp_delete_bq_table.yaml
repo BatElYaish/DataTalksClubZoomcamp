@@ -1,0 +1,32 @@
+id: gcp_delete_bq_table
+namespace: zoomcamp
+description: |
+  Given the table name, this flow deleted the table in GCP
+  
+inputs:
+  - id: table_name
+    type: STRING
+    displayName: BQ table name
+    defaults: green_tripdata_2020_03
+
+variables:
+  table_name: "{{inputs.table_name}}"
+
+tasks:
+  - id: delete_bq_stg_tables
+    type: io.kestra.plugin.gcp.bigquery.DeleteTable
+    dataset: "{{kv('GCP_DATASET')}}"
+    table: "{{render(vars.table_name)}}"
+
+outputs:
+  - id: deleted_table
+    type: STRING
+    value: "{{outputs.delete_bq_stg_tables.table}}"
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{kv('GCP_CREDS')}}"
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
