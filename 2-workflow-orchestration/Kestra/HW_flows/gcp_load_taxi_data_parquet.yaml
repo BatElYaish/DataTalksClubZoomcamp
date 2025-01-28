@@ -7,7 +7,7 @@ inputs:
   - id: taxi
     type: SELECT
     displayName: Select taxi type
-    values: [yellow, green]
+    values: [yellow, green, fhv]
     defaults: green
 
   - id: year
@@ -25,7 +25,7 @@ inputs:
 
 variables:
   file: "{{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.parquet"
-  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/Raw/parquet/{{vars.file}}"
+  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/Raw/parquet/{{inputs.taxi}}/{{inputs.year}}/{{vars.file}}"
   data: "{{outputs.extract.outputFiles[inputs.taxi ~ '_tripdata_' ~ inputs.year ~ '-' ~ inputs.month ~ '.parquet']}}"
 
 tasks:
