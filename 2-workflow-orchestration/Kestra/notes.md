@@ -33,4 +33,4 @@
     * `GCP_LOCATION`
     * `GCP_BUCKET_NAME`
 
-2. Run flow `05_gcp_setup.yaml` to set up GCP resources, this creates a bucket and a dataset in GCP.
+2. Run flow `gcp_setup.yaml` to set up GCP resources, this creates a bucket and a dataset in GCP.
