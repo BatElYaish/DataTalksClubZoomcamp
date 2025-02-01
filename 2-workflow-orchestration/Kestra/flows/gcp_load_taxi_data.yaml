@@ -1,7 +1,5 @@
 id: gcp_load_taxi_data
 namespace: zoomcamp
-description: |
-  The CSV Data used in the course: https://github.com/DataTalksClub/nyc-tlc-data/releases
 
 inputs:
   - id: taxi
@@ -24,11 +22,11 @@ inputs:
     defaults: "01"
 
 variables:
-  file: "{{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.csv"
-  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/Raw/{{vars.file}}"
+  file: "{{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.parquet"
+  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/Raw/{{inputs.taxi}}/{{inputs.year}}/{{vars.file}}"
   table: "{{kv('GCP_DATASET')}}.{{inputs.taxi}}_tripdata_{{inputs.year}}_{{inputs.month}}"
   table_name: "{{inputs.taxi}}_tripdata_{{inputs.year}}_{{inputs.month}}"
-  data: "{{outputs.extract.outputFiles[inputs.taxi ~ '_tripdata_' ~ inputs.year ~ '-' ~ inputs.month ~ '.csv']}}"
+  data: "{{outputs.extract.outputFiles[inputs.taxi ~ '_tripdata_' ~ inputs.year ~ '-' ~ inputs.month ~ '.parquet']}}"
 
 tasks:
   - id: set_label
@@ -40,11 +38,11 @@ tasks:
   - id: extract
     type: io.kestra.plugin.scripts.shell.Commands
     outputFiles:
-      - "*.csv"
+      - "*.parquet"
     taskRunner:
       type: io.kestra.plugin.core.runner.Process
     commands:
-      - wget -qO- https://github.com/DataTalksClub/nyc-tlc-data/releases/download/{{inputs.taxi}}/{{render(vars.file)}}.gz | gunzip > {{render(vars.file)}}
+      - wget -qO- https://d37ci6vzurychx.cloudfront.net/trip-data/{{render(vars.file)}} > {{render(vars.file)}}
 
   - id: upload_to_gcs
     type: io.kestra.plugin.gcp.gcs.Upload
@@ -108,10 +106,8 @@ tasks:
               congestion_surcharge NUMERIC OPTIONS (description = 'Congestion surcharge applied to trips in congested zones')
           )
           OPTIONS (
-              format = 'CSV',
-              uris = ['{{render(vars.gcs_file)}}'],
-              skip_leading_rows = 1,
-              ignore_unknown_values = TRUE
+              format = 'PARQUET',
+              uris = ['{{render(vars.gcs_file)}}']
           );
 
       - id: bq_yellow_table_tmp
@@ -202,10 +198,8 @@ tasks:
               congestion_surcharge NUMERIC OPTIONS (description = 'Congestion surcharge applied to trips in congested zones')
           )
           OPTIONS (
-              format = 'CSV',
-              uris = ['{{render(vars.gcs_file)}}'],
-              skip_leading_rows = 1,
-              ignore_unknown_values = TRUE
+              format = 'PARQUET',
+              uris = ['{{render(vars.gcs_file)}}']
           );
 
       - id: bq_green_table_tmp
