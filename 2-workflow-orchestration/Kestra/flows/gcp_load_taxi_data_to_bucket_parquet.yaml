@@ -25,7 +25,7 @@ inputs:
 
 variables:
   file: "{{inputs.taxi}}_tripdata_{{inputs.year}}-{{inputs.month}}.parquet"
-  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/Raw/{{inputs.taxi}}/{{inputs.year}}/{{vars.file}}"
+  gcs_file: "gs://{{kv('GCP_BUCKET_NAME')}}/Raw/{{inputs.year}}/{{vars.file}}"
   data: "{{outputs.extract.outputFiles[inputs.taxi ~ '_tripdata_' ~ inputs.year ~ '-' ~ inputs.month ~ '.parquet']}}"
 
 tasks:
