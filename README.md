@@ -16,7 +16,7 @@ Understand data lake setups and workflow orchestration with Kestra. **Progress:*
 
 ### Module 3: Data Warehouse
 
-Deep dive into BigQuery, partitioning, clustering, and best practices. **Progress:** Upcoming ⏳
+Deep dive into BigQuery, partitioning, clustering, and best practices. **Progress:** Done ✅
 
 ### Module 4: Analytics Engineering
 
