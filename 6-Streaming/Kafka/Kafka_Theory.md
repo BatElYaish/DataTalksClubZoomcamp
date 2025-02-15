@@ -14,9 +14,32 @@ If the key has a value, all the messages that have the same key will go to the s
 Producers can choose to receive a verification (Acknowledgment) that the data was written.  
 Acknowledgment types:
 
-* `acks=0`: Producer won't wait for acknowledgment (possible data loss)
-* `acks=1`: Producer will wait for leader acknowledgment (limited data loss)
-* `acks=all`: Leader + all in-sync replicas (ISR) acknowledgment (no data loss, unless all ISR go down at once)
+* `acks=0`: Producer won't wait for acknowledgment (possible data loss)  
+  producers consider messages as "written successfully" the moment the message was sent without waiting for the broker to accept it at all.  
+  If the broker goes offline or an exception happens, we won't know and will lose data. Useful for data where it's okay to potentially lose messages, such as metrics collection.  
+  Produces the highest throughput setting because the network overhead is minimized.  
+* `acks=1`: Producer will wait for leader acknowledgment (limited data loss)  
+  producers consider messages as "written successfully" when the message was acknowledged by only the leader  
+  Leader response is requested, but replication is not a guarantee as it happens in the background  
+  If the leader broker goes offline unexpectedly but replicas haven't replicated the data yet, we have a data loss  
+  If an ack is not received, the producer may retry the request  
+  Gives more overhead but more safety, but there is no grantee the data is replicates
+* `acks=all`/`acks=-1`: Leader + all in-sync replicas (ISR) acknowledgment (no data loss, unless all ISR go down at once)  
+  producers consider messages as "written successfully" when the message is accepted by all in-sync replicas (ISR)  
+  This setting goes with `min.insync.replicas` The leader replica for a partition checks to see if there are enough in-sync replicas for safely writing the message  
+  `min.insync.replicas=1`: only the broker leader needs to successfully ack  
+  `min.insync.replicas=2`: at least the broker leader and one replica need to ack  
+  If the `min.insync.replicas=N` and you only have `<N` brokers then when the producer will send the data to the leader wanting to write with 2 replicas, the broker will respond NOT_ENOUGH-REPLICAS, it will prefer not to write the data if there is a possible data loss.  
+
+  Topic Availability: (considering RF=3)  
+  `acks=0& acks=1`: if one partition is up and considered an ISR, the topic will be available for writes.
+  `acks=all`:  
+    `min.insync.replicas=1` (default): the topic must have at least 1 partition up as an ISR (that includes the leader) and so we can tolerate two brokers being down  
+    `min.insync.replicas=2`: the topic must have at least 2 ISR up, and therefore we can tolerate at most one broker being down (in the case of replication factor of 3), and we have the guarantee that for every write,the data will be at least written twice  
+    `min.insync.replicas=3`: this wouldn't make much sense for a corresponding replication factor of 3 and we couldn't tolerate any broker going down.
+  in summary, when acks=all with a replication factor=N and `min.insync.replicas`=M we can tolerate N-M brokers going down for topic availability purposes.  
+
+  `acks=all` and `min.insync.replicas=2` and `RF=3` is the most popular option for data durability and availability and allows you to withstand at most the loss of one Kafka broker.
 
 ## Topic
 
