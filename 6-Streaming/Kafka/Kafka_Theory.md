@@ -65,8 +65,11 @@ In Kafka Consumer properties: `partition.assignment.strategy`
 
 The default assignor is `[RangeAssignor, CooperativeStickyAssignor]`, which will use the RangeAssignor by default, but allows upgrading to the CooperativeStickyAssignor with just a single rolling bounce that removes the RangeAssignor from the list.  
 
-In Kafka Connect: already implemented (enabled by default)  
-In Kafka Streams: turned on by default using StreamsPartitionAssignor  
+Kafka log after a consumer in the group is down and the partitions for the current consumer are reassigned to it:
+Assigned partitions:                       [demo_java-0, demo_java-1, demo_java-2]  
+        Current owned partitions:                  [demo_java-1]  
+        Added partitions (assigned - owned):       [demo_java-0, demo_java-2]  
+        Revoked partitions (owned - assigned):     []  
 
 **Static group membership**
 By default, when a consume leaves a group, its partitions are revoked and re-assigned. If it joins back, it will have a new "member ID" and new partitions assigned.  
