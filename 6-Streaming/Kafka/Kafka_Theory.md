@@ -49,6 +49,32 @@ If there are more consumers than partitions, some consumers will be inactive.
 
 ![consumer_group](https://github.com/BatElYaish/DataTalksClubZoomcamp/blob/main/6-Streaming/Kafka/Images/consumer_group.png "consumer_group")
 
+**Partition Rebalance**  
+Partition rebalancing is moving partitions between consumers. This happens when a consumer is joining or leaving the group or if we add new partitions to the topic.  
+
+Rebalance strategies:  
+
+* Eager Rebalance - default. when a consumer joins the group, all the other consumers stops, no consumer is reading from no partition. during a short period of time the entire consumer group stops processing.then all the consumers are going to join the group they were in and get a new partition assignment. the partitions are assigned randomly and there is no guarantee that a consumer will get the same partition.
+* Cooperative Rebalance (Incremental Rebalance) - this wil reassign a small subset of the partitions from one consumer to another, other consumers that don't have reassigned partition can still process uninterrupted. it can go through several iterations until it finds a stable assignment. this avoids all consumers stopping.
+
+In Kafka Consumer properties: `partition.assignment.strategy`  
+`RangeAssignor`: assign partitions on a per-topic basis (can lead to imbalance) (Eager).  
+`RoundRobin`: assign partitions across all topics in round-robin fashion, optimal balance (Eager).  
+`StickyAssignor`: balanced like RoundRobin, and then minimizes partition movements when consumer join / leave the group in order to minimize movements (Eager).  
+`CooperativeStickyAssignor`: rebalance strategy is identical to StickyAssignor but supports cooperative rebalance and therefore consumers can keep on consuming from the topic.  
+
+The default assignor is `[RangeAssignor, CooperativeStickyAssignor]`, which will use the RangeAssignor by default, but allows upgrading to the CooperativeStickyAssignor with just a single rolling bounce that removes the RangeAssignor from the list.  
+
+In Kafka Connect: already implemented (enabled by default)  
+In Kafka Streams: turned on by default using StreamsPartitionAssignor  
+
+**Static group membership**
+By default, when a consume leaves a group, its partitions are revoked and re-assigned. If it joins back, it will have a new "member ID" and new partitions assigned.  
+If you specify `group.instance.id` it makes the consumer a "static member".  
+Upon leaving, the consumer has up to `session.timeout.ms` to join back and get back its partitions (else they will be re-assigned), without triggering a rebalance.  
+This is helpful when consumers maintain local state and cache (to avoid re-building  the cache).
+cache by making sure that
+
 **Consumer Offset**  
 Kafka stores the offset at which a consumer group has been reading in a special topic named `__consumer_offsets`.  
 When a consumer in a group has processed the data from Kafka, it should periodically tell Kafka to update its progress by committing the offset. This way, if a consumer dies, it will be able to resume from where it left off.  
