@@ -77,25 +77,25 @@ Testing can be defined in the schema file for each column . we can decide using 
 
 dbt has 4 built-in testing:
 
->1. unique
->2. not null
->3. accepted value
->
->>```yaml
->>- accepted_values:
->>    values:
->>    - "{{ var('payment_type_values') | join(', ') }}"
->>    severity: warn
->>    quote: false
->>```
->
->4. foreign key
->
->>```yaml
->> - relationships:
->>     field: locationid
->>     to: ref('taxi_zone_lookup')
->>```
+1. unique
+2. not null
+3. accepted value
+
+    ```yaml
+    - accepted_values:
+        values:
+        - "{{ var('payment_type_values') | join(', ') }}"
+        severity: warn
+        quote: false
+    ```
+
+4. foreign key
+
+    ```yaml
+     - relationships:
+         field: locationid
+         to: ref('taxi_zone_lookup')
+    ```
 
 we can also use a condition to define when we want to get a warning and when the number of fails is above a set threshold and we want the test to fail
 
@@ -143,6 +143,15 @@ defining values used across the project
 
 when using the cloud:
 deploy-> environments
+
+## dbt Operators
+
+`model+` -The model selected and all models downstream of it  
+`+model` -The model selected and all models upstream of it  
+n-plus - The model selected and models 'n' nodes upstream/downstream  
+`@` -The model selected, all its descendants, and all the ancestors of its descendants  
+
+Source: [dbt Command Guide](https://www.thedataschool.co.uk/edward-hayter/dbt-command-guide/)
 
 ## Tips
 
