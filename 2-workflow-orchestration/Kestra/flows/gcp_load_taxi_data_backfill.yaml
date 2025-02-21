@@ -3,27 +3,28 @@ namespace: zoomcamp
 
 variables:
   color:
-    # - yellow
+    - yellow
     - green
+    # - fhv
   years:
-    - 2022
+    # - 2022
     # - 2021
-    # - 2020
+    - 2020
     # - 2019
   months:
     - "01"
-    # - "02"
-    # - "03"
-    # - "04"
-    # - "05"
-    # - "06"
-    # - "07"
-    # - "08"
-    # - "09"
-    # - "10"
-    # - "11"
-    # - "12"
-  subflowId: 06_gcp_load_parquet #06_gcp_taxi
+    - "02"
+    - "03"
+    - "04"
+    - "05"
+    - "06"
+    - "07"
+    - "08"
+    - "09"
+    - "10"
+    - "11"
+    - "12"
+  subflowId: gcp_load_taxi_data_to_bucket_parquet
 
 tasks:
   - id: for_each_color
