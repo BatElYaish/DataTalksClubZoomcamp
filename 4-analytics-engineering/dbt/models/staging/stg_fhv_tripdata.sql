@@ -15,8 +15,7 @@ select
     -- trip info
     sr_flag
 from  {{ source('staging','fhv_tripdata') }}
-where  EXTRACT(YEAR FROM pickup_datetime) = 2019
-
+where dispatching_base_num is not null
 
 {% if var('is_test_run', default=true) %}
 

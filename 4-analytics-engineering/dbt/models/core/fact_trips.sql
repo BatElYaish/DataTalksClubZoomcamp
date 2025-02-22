@@ -23,7 +23,10 @@ dim_zones as (
     select * from {{ ref('dim_zones') }}
     where borough != 'Unknown'
 )
-select trips_unioned.tripid, 
+select trips_unioned.tripid,
+    EXTRACT(YEAR FROM pickup_datetime) as trip_year,
+    EXTRACT(MONTH FROM pickup_datetime ) as trip_month,
+    EXTRACT(QUARTER FROM pickup_datetime ) as trip_quarter,
     trips_unioned.vendorid, 
     trips_unioned.service_type,
     trips_unioned.ratecodeid, 
