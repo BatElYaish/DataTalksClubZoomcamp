@@ -12,6 +12,8 @@ dim_zones as (
     where borough != 'Unknown'
 )
 select fhv_tripdata.tripid, 
+    EXTRACT(YEAR FROM pickup_datetime) as trip_year,
+    EXTRACT(MONTH FROM pickup_datetime) as trip_month,
     fhv_tripdata.pickup_locationid, 
     pickup_zone.borough as pickup_borough, 
     pickup_zone.zone as pickup_zone, 
@@ -20,6 +22,7 @@ select fhv_tripdata.tripid,
     dropoff_zone.zone as dropoff_zone,  
     fhv_tripdata.pickup_datetime, 
     fhv_tripdata.dropoff_datetime,
+    TIMESTAMP_DIFF(fhv_tripdata.dropoff_datetime, fhv_tripdata.pickup_datetime, SECOND) AS trip_duration,
     fhv_tripdata.sr_flag
 from fhv_tripdata
 inner join dim_zones as pickup_zone
