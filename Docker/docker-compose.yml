@@ -8,7 +8,7 @@ services:
     image: jupyterlab
     container_name: jupyterlab
     ports:
-      - 8888:8888
+      - 8889:8888
     volumes:
       - shared-workspace:/opt/workspace
   spark-master:
@@ -78,7 +78,6 @@ services:
       - "8081:8081"
     environment:
       # SCHEMA_REGISTRY_HOST_NAME: schema-registry # used for intercommunication
-      # SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: "zookeeper:2181" #(depreciated)
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: "broker:29092"
       SCHEMA_REGISTRY_HOST_NAME: "localhost"
       SCHEMA_REGISTRY_LISTENERS: "http://0.0.0.0:8081" #(default: http://0.0.0.0:8081)
