@@ -1,0 +1,30 @@
+FROM flink:1.19.2-scala_2.12-java11
+
+# install python3 and pip3
+RUN apt-get update -y && \
+    apt-get install -y python3 python3-pip python3-dev && \
+    rm -rf /var/lib/apt/lists/*
+RUN ln -s /usr/bin/python3 /usr/bin/python
+
+# install PyFlink
+COPY requirements.txt .
+RUN python -m pip install --upgrade pip && \
+    pip3 install -r requirements.txt --no-cache-dir
+
+# Download connector libraries
+RUN wget -P /opt/flink/lib/ \
+    https://repo.maven.apache.org/maven2/org/apache/flink/flink-json/1.9.2/flink-json-1.9.2.jar \
+    https://repo.maven.apache.org/maven2/org/apache/flink/flink-connector-jdbc/3.2.0-1.19/flink-connector-jdbc-3.2.0-1.19.jar \
+    https://repo1.maven.org/maven2/org/postgresql/postgresql/42.7.5/postgresql-42.7.5.jar \
+	https://repo.maven.apache.org/maven2/org/apache/flink/flink-sql-connector-kafka/3.3.0-1.19/flink-sql-connector-kafka-3.3.0-1.19.jar \    
+	https://repo1.maven.org/maven2/com/google/cloud/google-cloud-storage/2.26.1/google-cloud-storage-2.26.1.jar; # Add GCS filesystem configuration
+
+RUN echo "fs.gs.impl=com.google.cloud.hadoop.fs.gcs.GoogleHadoopFileSystem" >> /opt/flink/conf/flink-conf.yaml && \
+echo "fs.AbstractFileSystem.gs.impl=com.google.cloud.hadoop.fs.gcs.GoogleHadoopFS" >> /opt/flink/conf/flink-conf.yaml
+
+RUN echo "taskmanager.memory.jvm-metaspace.size: 512m" >> /opt/flink/conf/flink-conf.yaml
+
+RUN echo "state.backend.type: hashmap" >> /opt/flink/conf/flink-conf.yaml && \
+    echo "state.checkpoints.dir: file:///opt/flink/checkpoints" >> /opt/flink/conf/flink-conf.yaml
+
+WORKDIR /opt/flink; 
