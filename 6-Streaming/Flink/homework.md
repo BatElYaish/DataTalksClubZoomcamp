@@ -25,10 +25,10 @@ A: True
 
 ## Question 4: Sending the Trip Data
 
-Q: How much time did it take to send the entire dataset and flush? 
+Q: How much time did it take to send the entire dataset and flush?
 A: took 79.85 seconds
 
-## Question 5: Build a Sessionization Window (2 points)
+## Question 5: Build a Sessionization Window
 
 Setup:
 
