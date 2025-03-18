@@ -33,6 +33,12 @@ Configs:
 **Delete**  
 `kafka-topics --bootstrap-server broker:29092 --topic first_topic --delete`
 
+**Configurations**
+Add config:  
+`kafka-configs --bootstrap-server broker:9092 --entity-type topics --entity-name configured-topic --alter --add-config min.insync replicas=2`  
+Delete config:  
+`kafka-configs --bootstrap-server broker:9092 --entity-type topics --entity-name configured-topic --alter --delete-config min.insync replica`
+
 ## Producer
 
 **Produce**  
